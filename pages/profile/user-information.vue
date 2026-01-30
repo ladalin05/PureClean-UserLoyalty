@@ -100,12 +100,13 @@
                 {{ translate("phone") }}
               </label>
               <v-text-field
-                v-model="userData.phone"
+                v-model="formattedPhone"
                 variant="outlined"
                 density="comfortable"
                 class="custom-field dark:text-[#FFFFFF]"
                 :placeholder="translate('input_phone')"
                 hide-details
+                maxlength="12"
               />
             </div>
           </v-form>
@@ -161,6 +162,20 @@ const formattedDob = computed(() => {
   }).format(new Date(userData.value.dob))
 })
 
+const formattedPhone = computed({
+  get: () =>
+    (userData.value?.phone || '')
+      .replace(/\D/g, '')
+      .replace(/^(\d{0,3})(\d{0,3})(\d{0,1}).*$/, (_, g1, g2, g3 ) =>
+        [g1, g2, g3].filter(Boolean).join(' ')
+      ),
+  set: (val: string) => {
+    let digits = val.replace(/\D/g, '')
+    if (digits && digits[0] !== '0') digits = '0' + digits
+    userData.value.phone = digits
+  }
+})
+
 // --- Lifecycle ---
 onMounted(async () => {
   try {
@@ -173,6 +188,7 @@ onMounted(async () => {
     isLoading.value = false
   }
 })
+
 
 // --- Methods ---
 const handleSubmit = async () => {
