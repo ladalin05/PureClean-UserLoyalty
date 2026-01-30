@@ -12,14 +12,14 @@ const { $swal } = useNuxtApp()
 const router = useRouter()
 
 onMounted(() => {
-  if (!process.client) return
+  if (!import.meta.client) return
 
-  // Define callback BEFORE loading script
-  window.onTelegramAuth = async (user) => {
+  // MUST be global
+  window['onTelegramAuth'] = async (user) => {
     try {
       console.log('Telegram user:', user)
       await userAuthStore.loginWithTelegram(user)
-      router.push('/') // optional redirect
+      router.push('/')
     } catch (error) {
       console.error('Telegram login error:', error)
       await $swal.fire({
@@ -31,7 +31,6 @@ onMounted(() => {
     }
   }
 
-  // Prevent duplicate widget
   const container = document.getElementById('telegram-login')
   if (!container || container.children.length > 0) return
 
