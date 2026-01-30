@@ -1,0 +1,1 @@
+import{_ as n,r as e,n as c,o as r,w as a,h as _,b as l,a6 as d}from"./UQl896Zx.js";const p={},m={class:"w-[550px] mx-auto"};function f(o,i){const s=e("v-main"),t=e("v-app");return r(),c(t,null,{default:a(()=>[_(s,{class:"m-0 bg-[#FFFFFF] dark:bg-[#191919]"},{default:a(()=>[l("div",m,[d(o.$slots,"default")])]),_:3})]),_:3})}const v=n(p,[["render",f]]);export{v as default};

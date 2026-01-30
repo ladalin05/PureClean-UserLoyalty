@@ -1,0 +1,1 @@
+import{i as c,u as o,j as r}from"./UQl896Zx.js";const d=c("news",()=>{const{$AdminPrivateAxios:a}=o(),s=r([]),t=r(null);return{news:s,singleNews:t,fetchNews:async()=>{const e=(await a.get("/news"))?.data?.data||{};s.value=Array.isArray(e.data)?e.data:[]},fetchNew:async n=>{const e=await a.get(`/news/${n}`);t.value=e?.data?.data}}});export{d as u};

@@ -1,0 +1,1 @@
+import{a4 as u,k as r,a5 as n,$ as o}from"./UQl896Zx.js";const d=u(async s=>{let a,e;const t=r();[a,e]=n(()=>t.initializeSession()),await a,e();const i=!!t.getToken()?([a,e]=n(()=>t.checkTokenExpired()),a=await a,e(),a):!1;if(i&&s.path==="/auth")return o("/");if(!i&&s.path!=="/auth")return o("/auth")});export{d as default};
