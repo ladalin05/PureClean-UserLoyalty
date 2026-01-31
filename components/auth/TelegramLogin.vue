@@ -16,6 +16,7 @@ onMounted(() => {
 
   // Make callback global
   window.onTelegramAuth = async (user) => {
+    console.log("Telegram user data:", user);
     const username = user.username || user.first_name + user.last_name; // Fallback to first name if username is not available
     const telegram_id = String(user.id); // Telegram user ID
     console.log("Telegram user:", user);
