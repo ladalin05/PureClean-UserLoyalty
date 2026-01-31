@@ -14,28 +14,6 @@ const router = useRouter()
 onMounted(() => {
   if (!import.meta.client) return
 
-  // Make callback global
-  window.onTelegramAuth = async (user) => {
-    console.log("Telegram user data:", user);
-    const username = user.username || user.first_name + user.last_name; // Fallback to first name if username is not available
-    const telegram_id = String(user.id); // Telegram user ID
-    console.log("Telegram user:", user);
-    const profile_picture = user.photo_url || "";
-    console.log("Profile picture URL:", profile_picture);
-    try {
-      await userAuthStore.login(username, telegram_id, profile_picture);
-    } catch (error) {
-      console.error("Login error:", error);
-      await $swal.fire({
-        title: 'Login or Signup failed',
-        text: 'Opps have something wrong. Let contact us!',
-        icon: 'error',
-        confirmButtonText: 'OK',
-        timer: 2000
-      });
-    }
-  };
-
   const container = document.getElementById('telegram-login')
   if (!container) return
 
@@ -62,4 +40,27 @@ onBeforeUnmount(() => {
   // Clean up global callback
   delete window.onTelegramAuth
 })
+
+  // Make callback global
+  window.onTelegramAuth = async (user) => {
+    console.log("Telegram user data:", user);
+    const username = user.username || user.first_name + user.last_name; // Fallback to first name if username is not available
+    const telegram_id = String(user.id); // Telegram user ID
+    console.log("Telegram user:", user);
+    const profile_picture = user.photo_url || "";
+    console.log("Profile picture URL:", profile_picture);
+    try {
+      await userAuthStore.login(username, telegram_id, profile_picture);
+    } catch (error) {
+      console.error("Login error:", error);
+      await $swal.fire({
+        title: 'Login or Signup failed',
+        text: 'Opps have something wrong. Let contact us!',
+        icon: 'error',
+        confirmButtonText: 'OK',
+        timer: 2000
+      });
+    }
+  };
+  
 </script>
