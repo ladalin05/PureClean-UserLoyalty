@@ -3,42 +3,48 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount } from 'vue'
+import { onMounted } from 'vue'
+import { userAuth } from '~/store/userAuth'
 
-const BOT_USERNAME = 'pureclean_loyality_bot' // without @
+const botUsername = 'pureclean_loyality_bot'
+const userAuthStore = userAuth()
+const { $swal } = useNuxtApp()
+const router = useRouter()
 
 onMounted(() => {
-  // 1️⃣ Expose function globally (Telegram needs window scope)
-  window.onTelegramAuth = (user) => {
-    alert(
-      `Logged in as ${user.first_name} ${user.last_name ?? ''} ` +
-      `(${user.id}${user.username ? ', @' + user.username : ''})`
-    )
+  if (!import.meta.client) return
 
-    // TODO: send user to backend
-    // fetch('/api/auth/telegram', {...})
+  // MUST be global
+  window['onTelegramAuth'] = async (user) => {
+    try {
+      console.log('Telegram user:', user)
+      await userAuthStore.loginWithTelegram(user)
+      router.push('/')
+    } catch (error) {
+      console.error('Telegram login error:', error)
+      await $swal.fire({
+        title: 'Login failed',
+        text: 'Something went wrong. Please try again.',
+        icon: 'error',
+        timer: 2000
+      })
+    }
   }
 
-  // 2️⃣ Remove old script if exists (important for SPA navigation)
-  const oldScript = document.getElementById('telegram-widget')
-  if (oldScript) oldScript.remove()
+  const container = document.getElementById('telegram-login')
+  if (!container || container.children.length > 0) return
 
-  // 3️⃣ Create script AFTER DOM is ready
   const script = document.createElement('script')
-  script.id = 'telegram-widget'
   script.src = 'https://telegram.org/js/telegram-widget.js?22'
   script.async = true
 
-  script.setAttribute('data-telegram-login', BOT_USERNAME)
+  script.setAttribute('data-telegram-login', botUsername)
   script.setAttribute('data-size', 'large')
+  script.setAttribute('data-radius', '20')
+  script.setAttribute('data-userpic', 'false')
   script.setAttribute('data-request-access', 'write')
   script.setAttribute('data-onauth', 'onTelegramAuth(user)')
 
-  document.getElementById('telegram-login').appendChild(script)
-})
-
-onBeforeUnmount(() => {
-  // cleanup (optional but good practice)
-  delete window.onTelegramAuth
+  container.appendChild(script)
 })
 </script>
