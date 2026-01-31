@@ -5,7 +5,7 @@
 <script setup>
 import { onMounted, onBeforeUnmount } from 'vue'
 
-const BOT_USERNAME = 'samplebot' // without @
+const BOT_USERNAME = 'pureclean_loyality_bot' // without @
 
 onMounted(() => {
   // 1️⃣ Expose function globally (Telegram needs window scope)
